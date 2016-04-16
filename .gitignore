@@ -1,9 +1,4 @@
+.DS_Store
 node_modules
 *.log
 .idea
-assets/css/antd.min.css
-
-dist
-vendor
-temp
-.DS_Store

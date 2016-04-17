@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
+    "module": "es2015",
+    "target": "es2015",
     "noEmit": true
   },
-  "exclude": [
-    "node_modules"
-  ],
   "files": [
     "typings/main.d.ts",
     "src/browser/test/__ambient.d.ts",

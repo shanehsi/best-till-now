@@ -15,10 +15,6 @@ module.exports = function(wallaby) {
       {pattern: "src/browser/test/**/*Spec.ts", load: false}
     ],
 
-    compilers: {
-      "**/*.js": wallaby.compilers.babel()
-    },
-
     postprocessor: webpackPostprocessor,
 
     testFramework: "mocha",

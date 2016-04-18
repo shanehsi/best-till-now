@@ -27,7 +27,10 @@ module.exports = function(wallaby) {
         if (/\bchai.js|sinon.js|babel-polyfill\/dist\/polyfill.js\b/.test(file.path)) return file.content;
         return require('babel-core').transform(file.content, {
           sourceMap: true,
-          presets: ['es2015']
+          presets: ['es2015'],
+          "plugins": [
+            "transform-async-to-generator"
+          ]
         })
       }
     },

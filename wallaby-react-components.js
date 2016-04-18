@@ -13,11 +13,11 @@ module.exports = function(wallaby) {
 
   return {
     files: [
-      {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false},
+      {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false, load: true},
       {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false, load: true},
       {pattern: 'node_modules/chai/chai.js', instrument: false, load: true},
       {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false, load: false},
-      {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false},
+      {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false, load: true},
       {pattern: 'src/browser/main/components/**/*.tsx', load: false},
       '!src/browser/main/components/**/__tests__/**/*.tsx'
     ],
@@ -32,7 +32,10 @@ module.exports = function(wallaby) {
         if (/\bchai.js|sinon.js|polyfill.js\b/.test(file.path)) return file.content;
         return require('babel-core').transform(file.content, {
           sourceMap: true,
-          presets: ['es2015']
+          presets: ['es2015'],
+          "plugins": [
+            "transform-async-to-generator"
+          ]
         });
       }
     },

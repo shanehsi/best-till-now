@@ -6,8 +6,8 @@
   },
   "files": [
     "typings/main.d.ts",
-    "src/browser/test/__ambient.d.ts",
-    "src/browser/test/personSpec.ts",
+    "src/browser/spec/__ambient.d.ts",
+    "src/browser/spec/personSpec.ts",
     "src/browser/main/Person.ts"
   ]
 }

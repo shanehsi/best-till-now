@@ -14,7 +14,7 @@ module.exports = function(wallaby) {
     ],
 
     tests: [
-      {pattern: "src/browser/test/**/*Spec.ts", load: false}
+      {pattern: "src/browser/spec/**/*Spec.ts", load: false}
     ],
 
     preprocessors: {

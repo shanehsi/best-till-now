@@ -7,7 +7,9 @@
   "files": [
     "typings/main.d.ts",
     "src/browser/spec/__ambient.d.ts",
+    "src/browser/main/Person.ts",
     "src/browser/spec/personSpec.ts",
-    "src/browser/main/Person.ts"
+    "src/browser/main/components/MyComponent.tsx",
+    "src/browser/main/components/__tests__/MyComponentTest.tsx"
   ]
 }

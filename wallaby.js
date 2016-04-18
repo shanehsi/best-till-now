@@ -1,5 +1,5 @@
-var path = require("path");
-var wallabyWebpack = require("wallaby-webpack");
+var path = require('path');
+var wallabyWebpack = require('wallaby-webpack');
 
 var webpackPostprocessor = wallabyWebpack({});
 
@@ -7,30 +7,34 @@ module.exports = function(wallaby) {
   return {
     files: [
       // chai 通过 <script> 引入, 并在 boostrap 时 将 chai.assert 放到 window 上
-      {pattern: "node_modules/babel-polyfill/dist/polyfill.js", instrument: false, load: true},
-      {pattern: "node_modules/chai/chai.js", instrument: false, load: true},
-      {pattern: "node_modules/sinon/pkg/sinon.js", instrument: false, load: false},
-      {pattern: "src/browser/main/**/*.ts", load: false}
+      {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false, load: true},
+      {pattern: 'node_modules/chai/chai.js', instrument: false, load: true},
+      {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false, load: false},
+      {pattern: 'src/browser/main/**/*.ts', load: false}
     ],
 
     tests: [
-      {pattern: "src/browser/spec/**/*Spec.ts", load: false}
+      {pattern: 'src/browser/spec/**/*Spec.ts', load: false}
     ],
 
+    compilers: {
+      '**/*.ts*': wallaby.compilers.typeScript({module: 'es2015'})
+    },
+
     preprocessors: {
-      "**/*.js*": file => {
+      '**/*.js*': file => {
         // preprocessors 似乎会处理所有的 js, 不管是否 `instrument: false`. 这里手动排除掉.
         if (/\bchai.js|sinon.js|babel-polyfill\/dist\/polyfill.js\b/.test(file.path)) return file.content;
-        return require("babel-core").transform(file.content, {
+        return require('babel-core').transform(file.content, {
           sourceMap: true,
-          presets: ["es2015"]
+          presets: ['es2015']
         })
       }
     },
 
     postprocessor: webpackPostprocessor,
 
-    testFramework: "mocha",
+    testFramework: 'mocha',
 
     bootstrap: function() {
       window.assert = chai.assert;

@@ -1,15 +1,12 @@
-import { shallow } from 'enzyme';
+import TestUtils from 'react/lib/ReactTestUtils'
 import MyComponent from '../MyComponent';
 
 describe('<MyComponent />', () => {
 
-  it('renders children when passed in', () => {
-    const wrapper = shallow(
-      <MyComponent>
-        <div className="unique"/>
-      </MyComponent>
-    );
-    assert.isTrue(wrapper.contains(<div className="unique"/>));
+  it('should not be undefined', function () {
+    var Component = TestUtils.renderIntoDocument(<MyComponent />);
+    var element = TestUtils.findRenderedDOMComponentWithTag(Component, 'div');
+    assert.isOk(element);
   });
 
 });

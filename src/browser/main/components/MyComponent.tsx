@@ -3,10 +3,8 @@ import { Component } from 'react';
 
 export default class MyComponent extends Component<any, any> {
   render() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
+    return <div>
+      Wallaby.js{' ' + (this.props ? this.props.children : 'unexpected')}
+    </div>;
   }
 }

@@ -1,48 +1,46 @@
+var wallabyWebpack = require('wallaby-webpack');
+
 module.exports = function(wallaby) {
+
+  var webpackPostprocessor = wallabyWebpack({
+    // webpack options
+
+    externals: {
+      // Use external version of React instead of rebuilding it
+      "react": "React"
+    }
+  });
 
   return {
     files: [
-      'src/browser/main/components/**/*.tsx',
+      {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false},
+      {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false, load: true},
+      {pattern: 'node_modules/chai/chai.js', instrument: false, load: true},
+      {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false, load: false},
+      {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false},
+      {pattern: 'src/browser/main/components/**/*.tsx', load: false},
       '!src/browser/main/components/**/__tests__/**/*.tsx'
     ],
     tests: [
-      'src/browser/main/components/**/__tests__/**/*.tsx'
+      {pattern: 'src/browser/main/components/**/__tests__/**/*.tsx', load: false}
     ],
     compilers: {
       '**/*.ts*': wallaby.compilers.typeScript({module: 'es6', jsx: 'react'})
     },
     preprocessors: {
-      '**/*.js*': file => require('babel-core').transform(file.content, {
-        sourceMap: true,
-        presets: ['es2015']
-      })
-    },
-    env: {
-      type: 'node'
+      '**/*.js*': file => {
+        if (/\bchai.js|sinon.js|polyfill.js\b/.test(file.path)) return file.content;
+        return require('babel-core').transform(file.content, {
+          sourceMap: true,
+          presets: ['es2015']
+        });
+      }
     },
     testFramework: 'mocha',
-
-    setup: function() {
-      global.React = require('react');
-      global.assert = require('chai').assert;
-
-      // Taken from https://github.com/airbnb/enzyme/blob/master/docs/guides/jsdom.md
-      var jsdom = require('jsdom').jsdom;
-
-      var exposedProperties = ['window', 'navigator', 'document'];
-
-      global.document = jsdom('');
-      global.window = document.defaultView;
-      Object.keys(document.defaultView).forEach((property) => {
-        if (typeof global[property] === 'undefined') {
-          exposedProperties.push(property);
-          global[property] = document.defaultView[property];
-        }
-      });
-
-      global.navigator = {
-        userAgent: 'node.js'
-      };
+    postprocessor: webpackPostprocessor,
+    bootstrap: function() {
+      window.assert = chai.assert;
+      window.__moduleBundler.loadTests();
     }
   };
 };

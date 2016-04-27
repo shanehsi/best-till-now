@@ -1,4 +1,5 @@
 var wallabyWebpack = require('wallaby-webpack');
+var wallabyHelper = require('./@app/wallaby-helper');
 
 module.exports = function(wallaby) {
 
@@ -12,35 +13,27 @@ module.exports = function(wallaby) {
   });
 
   return {
-    files: [
-      {pattern: 'node_modules/phantomjs-polyfill/bind-polyfill.js', instrument: false, load: true},
-      {pattern: 'node_modules/babel-polyfill/dist/polyfill.js', instrument: false, load: true},
-      {pattern: 'node_modules/chai/chai.js', instrument: false, load: true},
-      {pattern: 'node_modules/sinon/pkg/sinon.js', instrument: false, load: false},
-      {pattern: 'node_modules/react/dist/react-with-addons.js', instrument: false, load: true},
+    files: wallabyHelper.reactCommonFileList.concat([
       {pattern: 'src/main/components/**/*.tsx', load: false},
       '!src/main/components/**/__tests__/**/*.tsx'
-    ],
+    ]),
+
     tests: [
       {pattern: 'src/main/components/**/__tests__/**/*.tsx', load: false}
     ],
+
     compilers: {
       '**/*.ts*': wallaby.compilers.typeScript({module: 'es6', jsx: 'react'})
     },
+
     preprocessors: {
-      '**/*.js*': file => {
-        if (/\bchai.js|sinon.js|polyfill.js\b/.test(file.path)) return file.content;
-        return require('babel-core').transform(file.content, {
-          sourceMap: true,
-          presets: ['es2015'],
-          "plugins": [
-            "transform-async-to-generator"
-          ]
-        });
-      }
+      '**/*.js*': file => wallabyHelper.babel(file)
     },
+
     testFramework: 'mocha',
+
     postprocessor: webpackPostprocessor,
+
     bootstrap: function() {
       window.assert = chai.assert;
       window.__moduleBundler.loadTests();
